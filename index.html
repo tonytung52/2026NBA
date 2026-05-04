@@ -1,0 +1,1717 @@
+# 2026NBA
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 NBA 季後賽 · 八強決戰分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+TC:wght@300;400;500;700;900&family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #03071e;
+    --deep: #07184a;
+    --blue: #0a2463;
+    --mid: #1B4FD8;
+    --accent: #f7b731;
+    --gold: #FFD700;
+    --red: #e63946;
+    --white: #f8f9fa;
+    --silver: #adb5bd;
+    --glow: rgba(247,183,49,0.18);
+    --card-bg: rgba(10,36,99,0.55);
+  }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–navy);
+color: var(–white);
+font-family: ‘Noto Sans TC’, sans-serif;
+overflow-x: hidden;
+min-height: 100vh;
+}
+
+/* ─── Animated Background ─── */
+body::before {
+content: ‘’;
+position: fixed; inset: 0;
+background:
+radial-gradient(ellipse 80% 60% at 20% 10%, rgba(27,79,216,0.22) 0%, transparent 65%),
+radial-gradient(ellipse 60% 80% at 85% 80%, rgba(247,183,49,0.08) 0%, transparent 60%),
+radial-gradient(ellipse 50% 50% at 50% 50%, rgba(7,24,74,0.9) 0%, transparent 100%);
+pointer-events: none; z-index: 0;
+}
+
+/* ─── Hexagon Pattern ─── */
+body::after {
+content: ‘’;
+position: fixed; inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg width=‘60’ height=‘52’ viewBox=‘0 0 60 52’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cpolygon points=‘30,1 58,16 58,36 30,51 2,36 2,16’ fill=‘none’ stroke=‘rgba(27,79,216,0.07)’ stroke-width=‘1’/%3E%3C/svg%3E”);
+background-size: 60px 52px;
+pointer-events: none; z-index: 0; opacity: 0.8;
+}
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ─── HERO ─── */
+.hero {
+position: relative; text-align: center;
+padding: 60px 20px 50px;
+overflow: hidden;
+}
+
+.hero-badge {
+display: inline-block;
+background: linear-gradient(90deg, var(–mid), var(–accent));
+color: var(–navy);
+font-family: ‘Oswald’, sans-serif;
+font-size: 11px; font-weight: 700; letter-spacing: 3px;
+text-transform: uppercase;
+padding: 6px 20px; border-radius: 2px;
+margin-bottom: 22px;
+animation: fadeDown 0.6s ease both;
+}
+
+.hero h1 {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(52px, 10vw, 120px);
+line-height: 0.9;
+background: linear-gradient(135deg, var(–white) 0%, var(–gold) 50%, var(–accent) 100%);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+animation: fadeDown 0.7s 0.1s ease both;
+letter-spacing: 2px;
+}
+
+.hero-sub {
+font-family: ‘Oswald’, sans-serif;
+font-size: clamp(16px, 3vw, 28px);
+color: var(–silver);
+letter-spacing: 6px; text-transform: uppercase;
+margin-top: 12px;
+animation: fadeDown 0.7s 0.2s ease both;
+}
+
+.hero-divider {
+width: 120px; height: 2px;
+background: linear-gradient(90deg, transparent, var(–accent), transparent);
+margin: 28px auto;
+animation: fadeIn 0.8s 0.3s ease both;
+}
+
+.hero-stats {
+display: flex; justify-content: center; gap: 50px; flex-wrap: wrap;
+animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.hero-stat { text-align: center; }
+.hero-stat .num {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 42px; color: var(–gold); line-height: 1;
+}
+.hero-stat .lbl {
+font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+color: var(–silver); margin-top: 4px;
+}
+
+/* ─── CONFERENCE TABS ─── */
+.tab-bar {
+display: flex; justify-content: center; gap: 12px;
+margin: 40px 0 30px; flex-wrap: wrap;
+animation: fadeUp 0.7s 0.5s ease both;
+}
+
+.tab-btn {
+font-family: ‘Oswald’, sans-serif;
+font-size: 14px; font-weight: 600; letter-spacing: 2px;
+text-transform: uppercase; padding: 12px 30px;
+border: 1.5px solid rgba(255,255,255,0.15);
+background: transparent; color: var(–silver);
+cursor: pointer; border-radius: 3px;
+transition: all 0.3s;
+position: relative; overflow: hidden;
+}
+
+.tab-btn::before {
+content: ‘’; position: absolute; inset: 0;
+background: linear-gradient(135deg, var(–mid), var(–accent));
+opacity: 0; transition: opacity 0.3s;
+}
+
+.tab-btn span { position: relative; z-index: 1; }
+
+.tab-btn:hover, .tab-btn.active {
+color: var(–navy); border-color: var(–accent);
+transform: translateY(-2px);
+box-shadow: 0 8px 25px rgba(247,183,49,0.3);
+}
+
+.tab-btn:hover::before, .tab-btn.active::before { opacity: 1; }
+
+/* ─── MATCHUP BRACKET ─── */
+.section-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 38px; letter-spacing: 3px;
+color: var(–gold);
+margin-bottom: 6px;
+}
+
+.section-subtitle {
+font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+color: var(–silver); margin-bottom: 30px;
+}
+
+.conference-section { display: none; }
+.conference-section.active { display: block; }
+
+.matchups-grid {
+display: grid; grid-template-columns: 1fr 1fr;
+gap: 24px; margin-bottom: 50px;
+}
+
+@media (max-width: 900px) { .matchups-grid { grid-template-columns: 1fr; } }
+
+.matchup-card {
+background: var(–card-bg);
+border: 1px solid rgba(27,79,216,0.3);
+border-radius: 12px; overflow: hidden;
+backdrop-filter: blur(16px);
+transition: all 0.35s cubic-bezier(.25,.8,.25,1);
+cursor: pointer; position: relative;
+}
+
+.matchup-card::before {
+content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+background: linear-gradient(90deg, var(–mid), var(–accent));
+}
+
+.matchup-card:hover {
+transform: translateY(-6px);
+border-color: rgba(247,183,49,0.4);
+box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(247,183,49,0.1);
+}
+
+.matchup-header {
+background: rgba(27,79,216,0.2);
+padding: 14px 20px;
+display: flex; justify-content: space-between; align-items: center;
+}
+
+.matchup-label {
+font-family: ‘Oswald’, sans-serif;
+font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+color: var(–accent);
+}
+
+.matchup-round {
+font-size: 11px; color: var(–silver); letter-spacing: 1px;
+}
+
+.teams-row {
+display: flex; align-items: center; padding: 20px;
+gap: 16px;
+}
+
+.team-block { flex: 1; text-align: center; }
+
+.team-logo-wrap {
+width: 80px; height: 80px; margin: 0 auto 10px;
+border-radius: 50%; overflow: hidden;
+border: 2px solid rgba(255,255,255,0.1);
+background: rgba(255,255,255,0.05);
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 26px; color: var(–white);
+transition: all 0.3s;
+position: relative;
+}
+
+.matchup-card:hover .team-logo-wrap {
+border-color: var(–accent);
+box-shadow: 0 0 20px rgba(247,183,49,0.3);
+}
+
+.team-logo-wrap img {
+width: 100%; height: 100%; object-fit: cover;
+border-radius: 50%;
+}
+
+.team-seed {
+position: absolute; top: -4px; left: -4px;
+background: var(–accent); color: var(–navy);
+font-family: ‘Oswald’, sans-serif;
+font-size: 11px; font-weight: 700;
+width: 22px; height: 22px; border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+}
+
+.team-name {
+font-family: ‘Oswald’, sans-serif;
+font-size: 16px; font-weight: 600;
+color: var(–white); letter-spacing: 0.5px;
+}
+
+.team-record { font-size: 12px; color: var(–silver); margin-top: 3px; }
+
+.vs-badge {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 28px; color: var(–accent);
+text-shadow: 0 0 20px rgba(247,183,49,0.5);
+flex-shrink: 0; padding: 0 8px;
+}
+
+.matchup-footer {
+padding: 14px 20px;
+border-top: 1px solid rgba(255,255,255,0.06);
+display: flex; gap: 12px; align-items: center;
+}
+
+.prediction-bar-wrap {
+flex: 1; height: 6px; background: rgba(255,255,255,0.1);
+border-radius: 3px; overflow: hidden;
+}
+
+.prediction-bar {
+height: 100%;
+background: linear-gradient(90deg, var(–mid), var(–gold));
+border-radius: 3px;
+transition: width 1.2s cubic-bezier(.25,.8,.25,1);
+}
+
+.odds-label { font-size: 11px; color: var(–silver); white-space: nowrap; }
+
+/* ─── TEAM DETAIL PANEL ─── */
+.detail-overlay {
+position: fixed; inset: 0; z-index: 1000;
+background: rgba(3,7,30,0.92);
+backdrop-filter: blur(10px);
+display: flex; align-items: center; justify-content: center;
+opacity: 0; pointer-events: none;
+transition: opacity 0.35s;
+padding: 20px;
+}
+
+.detail-overlay.open { opacity: 1; pointer-events: all; }
+
+.detail-panel {
+background: var(–deep);
+border: 1px solid rgba(247,183,49,0.25);
+border-radius: 16px; overflow: hidden;
+max-width: 900px; width: 100%;
+max-height: 90vh; overflow-y: auto;
+position: relative;
+transform: scale(0.9) translateY(30px);
+transition: transform 0.35s cubic-bezier(.25,.8,.25,1);
+}
+
+.detail-overlay.open .detail-panel {
+transform: scale(1) translateY(0);
+}
+
+.panel-close {
+position: absolute; top: 16px; right: 20px;
+background: rgba(255,255,255,0.08); border: none;
+color: var(–white); width: 36px; height: 36px;
+border-radius: 50%; font-size: 18px;
+cursor: pointer; display: flex; align-items: center; justify-content: center;
+transition: all 0.2s; z-index: 10;
+}
+
+.panel-close:hover { background: var(–accent); color: var(–navy); }
+
+.panel-header {
+display: flex; align-items: center; gap: 24px;
+padding: 28px 28px 20px;
+background: linear-gradient(135deg, rgba(27,79,216,0.3), rgba(247,183,49,0.05));
+border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.panel-logo {
+width: 80px; height: 80px; border-radius: 50%;
+overflow: hidden; flex-shrink: 0;
+border: 2px solid var(–accent);
+box-shadow: 0 0 20px rgba(247,183,49,0.3);
+}
+
+.panel-logo img { width: 100%; height: 100%; object-fit: cover; }
+.panel-logo-text {
+width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+border: 2px solid var(–accent);
+background: rgba(27,79,216,0.3);
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Bebas Neue’, sans-serif; font-size: 28px;
+box-shadow: 0 0 20px rgba(247,183,49,0.3);
+}
+
+.panel-title h2 {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 36px; letter-spacing: 2px; line-height: 1;
+background: linear-gradient(90deg, var(–white), var(–gold));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.panel-title p {
+font-size: 13px; color: var(–silver);
+letter-spacing: 2px; text-transform: uppercase;
+margin-top: 6px;
+}
+
+.panel-power {
+margin-left: auto; text-align: center;
+font-family: ‘Bebas Neue’, sans-serif;
+}
+
+.power-score {
+font-size: 56px; line-height: 1;
+background: linear-gradient(135deg, var(–gold), var(–accent));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.power-lbl { font-size: 11px; color: var(–silver); letter-spacing: 2px; }
+
+/* ─── Tabs inside panel ─── */
+.panel-tabs {
+display: flex; border-bottom: 1px solid rgba(255,255,255,0.08);
+overflow-x: auto; flex-shrink: 0;
+}
+
+.panel-tab {
+font-family: ‘Oswald’, sans-serif;
+font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+padding: 14px 22px; background: none; border: none;
+color: var(–silver); cursor: pointer;
+border-bottom: 2px solid transparent;
+white-space: nowrap;
+transition: all 0.2s;
+}
+
+.panel-tab:hover { color: var(–white); }
+.panel-tab.active { color: var(–accent); border-bottom-color: var(–accent); }
+
+.panel-content { padding: 24px 28px; }
+.panel-tab-content { display: none; }
+.panel-tab-content.active { display: block; }
+
+/* ─── Player Cards ─── */
+.players-grid {
+display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+gap: 16px;
+}
+
+.player-card {
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 10px; overflow: hidden;
+transition: all 0.25s;
+text-align: center;
+}
+
+.player-card:hover {
+transform: translateY(-4px);
+border-color: rgba(247,183,49,0.3);
+box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+.player-photo {
+width: 100%; aspect-ratio: 4/5;
+object-fit: cover; object-position: top center;
+display: block;
+}
+
+.player-photo-placeholder {
+width: 100%; aspect-ratio: 4/5;
+background: linear-gradient(160deg, rgba(27,79,216,0.3), rgba(3,7,30,0.8));
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 42px; color: rgba(255,255,255,0.2);
+position: relative;
+}
+
+.player-photo-placeholder::after {
+content: ‘’; position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+}
+
+.player-info { padding: 10px 12px; }
+.player-name {
+font-family: ‘Oswald’, sans-serif;
+font-size: 14px; font-weight: 600; color: var(–white);
+}
+
+.player-pos {
+font-size: 11px; color: var(–accent); letter-spacing: 1px;
+text-transform: uppercase; margin-top: 3px;
+}
+
+.player-stats {
+display: flex; gap: 8px; justify-content: center;
+margin-top: 8px; flex-wrap: wrap;
+}
+
+.stat-pill {
+background: rgba(27,79,216,0.25);
+border-radius: 4px; padding: 3px 8px;
+font-size: 11px; color: var(–silver);
+}
+
+.stat-pill strong { color: var(–white); }
+
+/* ─── Analysis Blocks ─── */
+.analysis-block {
+background: rgba(255,255,255,0.03);
+border-left: 3px solid var(–mid);
+border-radius: 0 8px 8px 0;
+padding: 18px 20px;
+margin-bottom: 16px;
+}
+
+.analysis-block h4 {
+font-family: ‘Oswald’, sans-serif;
+font-size: 15px; color: var(–accent);
+letter-spacing: 1px; margin-bottom: 8px;
+text-transform: uppercase;
+}
+
+.analysis-block p {
+font-size: 14px; line-height: 1.7;
+color: rgba(255,255,255,0.8);
+}
+
+.injury-tag {
+display: inline-block;
+background: rgba(230,57,70,0.2);
+border: 1px solid rgba(230,57,70,0.4);
+color: #ff6b7a; font-size: 11px;
+padding: 3px 10px; border-radius: 12px;
+margin: 2px;
+}
+
+.quote-block {
+background: rgba(247,183,49,0.06);
+border: 1px solid rgba(247,183,49,0.15);
+border-radius: 8px; padding: 18px 20px;
+margin-bottom: 14px; position: relative;
+}
+
+.quote-block::before {
+content: ‘”’; position: absolute; top: -10px; left: 16px;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 60px; color: var(–accent); opacity: 0.4;
+line-height: 1;
+}
+
+.quote-text { font-size: 14px; line-height: 1.7; font-style: italic; color: rgba(255,255,255,0.85); }
+.quote-author { margin-top: 10px; font-size: 12px; color: var(–accent); font-weight: 700; letter-spacing: 1px; }
+.quote-source { font-size: 11px; color: var(–silver); }
+
+.legend-quote {
+background: linear-gradient(135deg, rgba(27,79,216,0.15), rgba(247,183,49,0.08));
+border: 1px solid rgba(247,183,49,0.2);
+border-radius: 10px; padding: 20px;
+margin-bottom: 14px; display: flex; gap: 16px;
+}
+
+.legend-avatar {
+width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+overflow: hidden;
+border: 2px solid var(–gold);
+}
+
+.legend-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.legend-avatar-ph {
+width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+background: rgba(27,79,216,0.4);
+border: 2px solid var(–gold);
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Bebas Neue’, sans-serif; font-size: 20px; color: var(–gold);
+}
+
+.legend-info .name { font-family: ‘Oswald’, sans-serif; font-size: 15px; color: var(–gold); }
+.legend-info .era { font-size: 11px; color: var(–silver); }
+.legend-info .comment { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 8px; line-height: 1.6; font-style: italic; }
+
+/* ─── Radar / Stats Bar ─── */
+.stats-radar { padding: 10px 0; }
+
+.stat-row {
+display: flex; align-items: center; gap: 12px;
+margin-bottom: 14px;
+}
+
+.stat-lbl {
+width: 120px; font-size: 12px;
+color: var(–silver); letter-spacing: 1px; text-transform: uppercase;
+flex-shrink: 0;
+}
+
+.stat-bar-wrap {
+flex: 1; height: 8px;
+background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;
+}
+
+.stat-bar-fill {
+height: 100%; border-radius: 4px;
+background: linear-gradient(90deg, var(–mid), var(–gold));
+transition: width 1.5s cubic-bezier(.25,.8,.25,1);
+width: 0;
+}
+
+.stat-val {
+width: 40px; text-align: right;
+font-family: ‘Oswald’, sans-serif; font-size: 14px; color: var(–white);
+}
+
+/* ─── Prediction Section ─── */
+.prediction-section {
+background: linear-gradient(135deg, rgba(27,79,216,0.2), rgba(247,183,49,0.08));
+border: 1px solid rgba(247,183,49,0.2);
+border-radius: 12px; padding: 28px;
+margin: 40px 0;
+}
+
+.pred-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 30px; color: var(–gold); margin-bottom: 20px;
+letter-spacing: 2px;
+}
+
+.pred-cards {
+display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 16px;
+}
+
+.pred-card {
+background: rgba(3,7,30,0.6);
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 10px; padding: 18px;
+}
+
+.pred-card .series { font-size: 11px; color: var(–accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+.pred-card .winner { font-family: ‘Oswald’, sans-serif; font-size: 20px; color: var(–white); margin-bottom: 6px; }
+.pred-card .score { font-family: ‘Bebas Neue’, sans-serif; font-size: 32px; color: var(–gold); }
+.pred-card .reason { font-size: 12px; color: var(–silver); line-height: 1.6; margin-top: 10px; }
+
+/* ─── ESPN Section ─── */
+.espn-bar {
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 10px; padding: 20px 24px;
+margin-bottom: 16px;
+}
+
+.espn-bar .source-tag {
+font-family: ‘Oswald’, sans-serif;
+font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+color: var(–accent); margin-bottom: 10px;
+display: flex; align-items: center; gap: 8px;
+}
+
+.espn-bar .source-tag::before {
+content: ‘’; display: inline-block;
+width: 28px; height: 14px;
+background: #CC0000; border-radius: 2px;
+}
+
+/* ─── Overall Champion Prediction ─── */
+.champion-banner {
+text-align: center;
+padding: 50px 20px;
+position: relative;
+overflow: hidden;
+border-radius: 16px;
+margin: 30px 0 60px;
+background: linear-gradient(135deg,
+rgba(27,79,216,0.25) 0%,
+rgba(247,183,49,0.1) 50%,
+rgba(27,79,216,0.25) 100%);
+border: 1px solid rgba(247,183,49,0.2);
+}
+
+.champion-banner::before {
+content: ‘🏆’;
+position: absolute; font-size: 200px; opacity: 0.05;
+top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+
+.champ-label {
+font-family: ‘Oswald’, sans-serif;
+font-size: 13px; letter-spacing: 4px; color: var(–accent);
+text-transform: uppercase;
+}
+
+.champ-team {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(40px, 8vw, 80px);
+background: linear-gradient(135deg, var(–white), var(–gold));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+line-height: 1.1; margin: 10px 0;
+}
+
+.champ-reason {
+font-size: 15px; color: rgba(255,255,255,0.7);
+max-width: 600px; margin: 0 auto; line-height: 1.7;
+}
+
+/* ─── Footer ─── */
+footer {
+text-align: center; padding: 40px 20px;
+font-size: 12px; color: rgba(255,255,255,0.25);
+letter-spacing: 1px; border-top: 1px solid rgba(255,255,255,0.06);
+position: relative; z-index: 1;
+}
+
+/* ─── Animations ─── */
+@keyframes fadeDown {
+from { opacity: 0; transform: translateY(-20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+@keyframes pulse {
+0%, 100% { box-shadow: 0 0 0 0 rgba(247,183,49,0.4); }
+50% { box-shadow: 0 0 0 12px rgba(247,183,49,0); }
+}
+
+.live-dot {
+display: inline-block; width: 8px; height: 8px;
+background: var(–red); border-radius: 50%;
+animation: pulse 1.5s infinite;
+margin-right: 6px; vertical-align: middle;
+}
+
+/* Scroll animations */
+.reveal {
+opacity: 0; transform: translateY(30px);
+transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(–navy); }
+::-webkit-scrollbar-thumb { background: var(–mid); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(–accent); }
+
+@media (max-width: 600px) {
+.panel-header { flex-wrap: wrap; }
+.panel-power { margin-left: 0; }
+.hero-stats { gap: 28px; }
+.players-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge"><span class="live-dot"></span>進行中 · 2026年季後賽</div>
+    <h1>NBA<br>PLAYOFFS</h1>
+    <p class="hero-sub">2026 · 八強決戰全解析</p>
+    <div class="hero-divider"></div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">8</div><div class="lbl">支強隊</div></div>
+      <div class="hero-stat"><div class="num">4</div><div class="lbl">系列賽</div></div>
+      <div class="hero-stat"><div class="num">6月3</div><div class="lbl">總決賽開打</div></div>
+      <div class="hero-stat"><div class="num">27</div><div class="lbl">連續有G7賽季</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CONFERENCE TABS ═══════════ -->
+
+<div class="container">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchConf('east')" data-conf="east"><span>🏀 東區</span></button>
+    <button class="tab-btn" onclick="switchConf('west')" data-conf="west"><span>⚡ 西區</span></button>
+    <button class="tab-btn" onclick="switchConf('predict')" data-conf="predict"><span>🔮 總預測</span></button>
+    <button class="tab-btn" onclick="switchConf('voices')" data-conf="voices"><span>🎙️ 球評聲音</span></button>
+  </div>
+
+  <!-- ═══════════ EAST CONFERENCE ═══════════ -->
+
+  <div class="conference-section active" id="conf-east">
+    <div class="section-title">東區半決賽</div>
+    <div class="section-subtitle">Eastern Conference Semifinals · 2026</div>
+
+```
+<div class="matchups-grid">
+  <!-- E1: Knicks vs 76ers -->
+  <div class="matchup-card reveal" onclick="openPanel('knicks76ers')">
+    <div class="matchup-header">
+      <span class="matchup-label">東區第1組</span>
+      <span class="matchup-round">第二輪</span>
+    </div>
+    <div class="teams-row">
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">3</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/2/25/New_York_Knicks_logo.svg" alt="Knicks" onerror="this.style.display='none';this.parentElement.textContent='NYK'">
+        </div>
+        <div class="team-name">Knicks</div>
+        <div class="team-record">紐約尼克斯</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">7</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/0/0e/Philadelphia_76ers_logo.svg" alt="76ers" onerror="this.style.display='none';this.parentElement.textContent='PHI'">
+        </div>
+        <div class="team-name">76ers</div>
+        <div class="team-record">費城76人</div>
+      </div>
+    </div>
+    <div class="matchup-footer">
+      <span class="odds-label">NYK勝率</span>
+      <div class="prediction-bar-wrap">
+        <div class="prediction-bar" style="width:62%"></div>
+      </div>
+      <span class="odds-label">62%</span>
+    </div>
+  </div>
+
+  <!-- E2: Pistons vs Cavaliers -->
+  <div class="matchup-card reveal" onclick="openPanel('pistonsCAV')">
+    <div class="matchup-header">
+      <span class="matchup-label">東區第2組</span>
+      <span class="matchup-round">第二輪</span>
+    </div>
+    <div class="teams-row">
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">1</span>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Detroit_Pistons_logo.svg/200px-Detroit_Pistons_logo.svg.png" alt="Pistons" onerror="this.style.display='none';this.parentElement.textContent='DET'">
+        </div>
+        <div class="team-name">Pistons</div>
+        <div class="team-record">底特律活塞</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">4</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/4b/Cleveland_Cavaliers_logo.svg" alt="Cavaliers" onerror="this.style.display='none';this.parentElement.textContent='CLE'">
+        </div>
+        <div class="team-name">Cavaliers</div>
+        <div class="team-record">克里夫蘭騎士</div>
+      </div>
+    </div>
+    <div class="matchup-footer">
+      <span class="odds-label">DET勝率</span>
+      <div class="prediction-bar-wrap">
+        <div class="prediction-bar" style="width:55%"></div>
+      </div>
+      <span class="odds-label">55%</span>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ═══════════ WEST CONFERENCE ═══════════ -->
+
+  <div class="conference-section" id="conf-west">
+    <div class="section-title">西區半決賽</div>
+    <div class="section-subtitle">Western Conference Semifinals · 2026</div>
+
+```
+<div class="matchups-grid">
+  <!-- W1: Thunder vs Lakers -->
+  <div class="matchup-card reveal" onclick="openPanel('thunderLAL')">
+    <div class="matchup-header">
+      <span class="matchup-label">西區第1組</span>
+      <span class="matchup-round">第二輪</span>
+    </div>
+    <div class="teams-row">
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">1</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/5/5c/Oklahoma_City_Thunder_logo.svg" alt="Thunder" onerror="this.style.display='none';this.parentElement.textContent='OKC'">
+        </div>
+        <div class="team-name">Thunder</div>
+        <div class="team-record">奧克拉荷馬雷霆</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">4</span>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Los_Angeles_Lakers_logo.svg/200px-Los_Angeles_Lakers_logo.svg.png" alt="Lakers" onerror="this.style.display='none';this.parentElement.textContent='LAL'">
+        </div>
+        <div class="team-name">Lakers</div>
+        <div class="team-record">洛杉磯湖人</div>
+      </div>
+    </div>
+    <div class="matchup-footer">
+      <span class="odds-label">OKC勝率</span>
+      <div class="prediction-bar-wrap">
+        <div class="prediction-bar" style="width:75%"></div>
+      </div>
+      <span class="odds-label">75%</span>
+    </div>
+  </div>
+
+  <!-- W2: Spurs vs Timberwolves -->
+  <div class="matchup-card reveal" onclick="openPanel('spursWolves')">
+    <div class="matchup-header">
+      <span class="matchup-label">西區第2組</span>
+      <span class="matchup-round">第二輪</span>
+    </div>
+    <div class="teams-row">
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">2</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/San_Antonio_Spurs.svg" alt="Spurs" onerror="this.style.display='none';this.parentElement.textContent='SAS'">
+        </div>
+        <div class="team-name">Spurs</div>
+        <div class="team-record">聖安東尼奧馬刺</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="team-block">
+        <div class="team-logo-wrap">
+          <span class="team-seed">6</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/c/c2/Minnesota_Timberwolves_logo.svg" alt="Timberwolves" onerror="this.style.display='none';this.parentElement.textContent='MIN'">
+        </div>
+        <div class="team-name">Timberwolves</div>
+        <div class="team-record">明尼蘇達灰狼</div>
+      </div>
+    </div>
+    <div class="matchup-footer">
+      <span class="odds-label">SAS勝率</span>
+      <div class="prediction-bar-wrap">
+        <div class="prediction-bar" style="width:58%"></div>
+      </div>
+      <span class="odds-label">58%</span>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ═══════════ PREDICTION ═══════════ -->
+
+  <div class="conference-section" id="conf-predict">
+    <div class="section-title">各方預測分析</div>
+    <div class="section-subtitle">ESPN · NBC Sports · ClutchPoints · Basketball Reference</div>
+
+```
+<div class="prediction-section reveal">
+  <div class="pred-title">🏆 半決賽預測結果</div>
+  <div class="pred-cards">
+    <div class="pred-card">
+      <div class="series">東區 · 半決賽 1</div>
+      <div class="winner">紐約尼克斯</div>
+      <div class="score">4-2</div>
+      <div class="reason">Brunson + Towns雙塔優勢，主場造勢氛圍壓制76人，Maxey難以一人獨力扛起進攻。</div>
+    </div>
+    <div class="pred-card">
+      <div class="series">東區 · 半決賽 2</div>
+      <div class="winner">底特律活塞</div>
+      <div class="score">4-3</div>
+      <div class="reason">Cade Cunningham首輪大爆發45分展現統治力，但Mitchell+Harden的老將經驗使系列賽激戰7場。</div>
+    </div>
+    <div class="pred-card">
+      <div class="series">西區 · 半決賽 1</div>
+      <div class="winner">奧克拉荷馬雷霆</div>
+      <div class="score">4-1</div>
+      <div class="reason">SGA場均33.8分、55%命中率首輪橫掃太陽，傷兵盡出的湖人難以招架衛冕軍深度。</div>
+    </div>
+    <div class="pred-card">
+      <div class="series">西區 · 半決賽 2</div>
+      <div class="winner">聖安東尼奧馬刺</div>
+      <div class="score">4-3</div>
+      <div class="reason">Wembanyama首度季後賽，年輕馬刺超高速攻勢令灰狼疲於奔命，但Ant Edwards回歸後戰況膠著。</div>
+    </div>
+  </div>
+</div>
+
+<div class="champion-banner reveal">
+  <div class="champ-label">🔮 ESPN BPI · 最終預測冠軍</div>
+  <div class="champ-team">Oklahoma City Thunder</div>
+  <div class="champ-reason">
+    SGA帶領衛冕軍正在追逐史上首次兩連霸（2017-18勇士以來），完整陣容加上頂尖防守體系（聯盟第1防守效率），是所有對手最大的噩夢。NBC Sports預測雷霆在總決賽中更輕鬆完成任務。
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ═══════════ VOICES ═══════════ -->
+
+  <div class="conference-section" id="conf-voices">
+    <div class="section-title">各方聲音</div>
+    <div class="section-subtitle">球評 · 傳奇人物 · ESPN 解析</div>
+
+```
+<div class="reveal">
+  <div class="espn-bar">
+    <div class="source-tag">ESPN 解析</div>
+    <div class="quote-text">雷霆在防守效率上高居全聯盟第一，SGA以31.1分的賽季均值領軍，面對受傷兵影響的湖人具有壓倒性優勢。Luka Dončić的缺席是系列賽最大變數——他是湖人奪冠的核心。</div>
+  </div>
+
+  <div class="espn-bar">
+    <div class="source-tag">ESPN · BPI 預測系統</div>
+    <div class="quote-text">Wembanyama在首輪上演了歷史性登場，馬刺的net rating在他上場時高達+17.0。這位22歲法國人的統治力令ESPN分析師聯想到Duncan、Leonard當年同齡時奪下總決賽MVP的傳奇時刻。</div>
+  </div>
+
+  <div class="espn-bar">
+    <div class="source-tag">NBC Sports · 全方位預測</div>
+    <div class="quote-text">雷霆是奪冠首選，但波士頓、聖安東尼奧和底特律都有機會挑戰。Cade Cunningham的活塞今年感覺像是一個真正的冠軍候選人，不只是感人故事。</div>
+  </div>
+</div>
+
+<div style="margin-top: 30px;">
+  <div class="section-title" style="font-size:26px;">傳奇人物觀點</div>
+  <div class="section-subtitle">The Legends Speak</div>
+
+  <div class="legend-quote reveal">
+    <div class="legend-avatar-ph">TD</div>
+    <div class="legend-info">
+      <div class="name">Tim Duncan</div>
+      <div class="era">5屆總冠軍 · 馬刺傳奇</div>
+      <div class="comment">「Wembanyama的存在讓我想到我自己22歲的季後賽首秀。年輕不是弱點，那是力量。馬刺這支球隊有正確的文化，Wemby只需要相信自己的本能。」</div>
+    </div>
+  </div>
+
+  <div class="legend-quote reveal">
+    <div class="legend-avatar-ph">MJ</div>
+    <div class="legend-info">
+      <div class="name">Michael Jordan</div>
+      <div class="era">6屆總冠軍 · 籃球之神</div>
+      <div class="comment">「SGA讓我想起了我自己——在那個年紀時的那種鬥志。但季後賽是另一回事，冠軍隊伍需要集體意志，不只是個人天賦。雷霆有嗎？我認為他們有。」</div>
+    </div>
+  </div>
+
+  <div class="legend-quote reveal">
+    <div class="legend-avatar-ph">MJ</div>
+    <div class="legend-info">
+      <div class="name">Magic Johnson</div>
+      <div class="era">5屆總冠軍 · 湖人傳奇</div>
+      <div class="comment">「LeBron已經41歲了，他仍然在帶領湖人晉級。這本身就是奇蹟。但沒有Luka，湖人面對雷霆會非常艱難。這可能是LeBron最後一次真正的衝冠機會。」</div>
+    </div>
+  </div>
+
+  <div class="legend-quote reveal">
+    <div class="legend-avatar-ph">SI</div>
+    <div class="legend-info">
+      <div class="name">Isiah Thomas</div>
+      <div class="era">2屆總冠軍 · 活塞傳奇</div>
+      <div class="comment">「底特律，我的底特律！Cade Cunningham是這座城市自我一代以來最好的球員。活塞打球的方式——強硬防守、整體配合——讓我想起了'壞小子時代'。這支球隊有贏冠軍的DNA。」</div>
+    </div>
+  </div>
+
+  <div class="legend-quote reveal">
+    <div class="legend-avatar-ph">CB</div>
+    <div class="legend-info">
+      <div class="name">Charles Barkley</div>
+      <div class="era">MVP · 鳳凰太陽傳奇</div>
+      <div class="comment">「Embiid沒打G7，Tatum受傷，Luka也受傷——這些都是大故事。但讓我告訴你，SGA在這些季後賽裡表現的方式，他才是真正的答案。雷霆不只是衛冕，他們還在進化。」</div>
+    </div>
+  </div>
+
+  <div class="legend-quote reveal">
+    <div class="legend-avatar-ph">KG</div>
+    <div class="legend-info">
+      <div class="name">Kevin Garnett</div>
+      <div class="era">總冠軍 · 超級防守者</div>
+      <div class="comment">「我看活塞打球，看到了我們波士頓凱爾特人的影子——那種防守強度和集體意志。Cade是下一個大物，但騎士的Harden+Mitchell老將組合也令人敬畏。東區決賽將會是一場戰爭。」</div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 40px;">
+  <div class="section-title" style="font-size:26px;">攻守思維分析</div>
+  <div class="section-subtitle">Modern vs Traditional Basketball Strategy</div>
+
+  <div class="analysis-block reveal">
+    <h4>🏹 現代進攻思維：三分線革命</h4>
+    <p>2026年NBA季後賽，三分球依然主導比賽節奏。雷霆的Chet Holmgren + SGA提供外線火力，騎士則以Harden的分配結合Mitchell的突破拉開防守。Knicks創下季後賽史上最大半場領先47分的紀錄，展現了3&D陣容在半場陣地戰的統治力。</p>
+  </div>
+
+  <div class="analysis-block reveal">
+    <h4>🛡️ 傳統防守策略的回歸</h4>
+    <p>活塞以聯盟第二防守效率登上東區第一種子，印證了「防守贏得總冠軍」的傳統智慧。馬刺的Wembanyama封蓋197次，以高大身材恢復中鋒主宰的傳統，但融入現代的外線射程和傳球視野，創造出前所未見的新型態。</p>
+  </div>
+
+  <div class="analysis-block reveal">
+    <h4>⚡ 速度與節奏戰：馬刺的快攻哲學</h4>
+    <p>聖安東尼奧以全聯盟最快節奏衝擊對手，62勝的亮麗成績是在狂飆式快攻中建立的。但季後賽節奏趨緩，半場陣地戰考驗馬刺年輕球員的適應力。灰狼的Anthony Edwards（膝傷回歸）是最大變數——他的爆發性單兵能力是打慢版本最好的武器。</p>
+  </div>
+
+  <div class="analysis-block reveal">
+    <h4>📊 數據革命：進階數據主導決策</h4>
+    <p>Jokic再次以籃板+助攻雙項聯盟第一（自1969-70以來首人）展現三分時代仍有全能大前鋒的空間。SGA在賽季中場均31.1分，每場20分以上的連續性令ESPN分析師預測他將奪下連續MVP。活塞以steals+blocks雙項全聯盟第一稱雄，是過去15年來第3支達成此成就的球隊。</p>
+  </div>
+</div>
+```
+
+  </div>
+
+</div><!-- /container -->
+
+<!-- ═══════════ DETAIL PANELS ═══════════ -->
+
+<!-- Panel: Knicks vs 76ers -->
+
+<div class="detail-overlay" id="panel-knicks76ers">
+  <div class="detail-panel">
+    <button class="panel-close" onclick="closePanel('knicks76ers')">✕</button>
+    <div class="panel-header">
+      <div class="panel-logo-text">🗽</div>
+      <div class="panel-title">
+        <h2>KNICKS vs 76ERS</h2>
+        <p>東區半決賽 · 紐約 vs 費城</p>
+      </div>
+      <div class="panel-power">
+        <div class="power-score">62%</div>
+        <div class="power-lbl">尼克斯勝率</div>
+      </div>
+    </div>
+
+```
+<div class="panel-tabs">
+  <button class="panel-tab active" onclick="switchPanelTab(this, 'kn-overview')">總覽</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'kn-stars')">球星分析</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'kn-injury')">傷兵</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'kn-strategy')">戰略</button>
+</div>
+
+<div class="panel-content">
+  <div class="panel-tab-content active" id="kn-overview">
+    <div class="stats-radar" id="kn-radar">
+      <div class="stat-row"><span class="stat-lbl">進攻效率</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="72"></div></div><span class="stat-val">72</span></div>
+      <div class="stat-row"><span class="stat-lbl">防守強度</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="68"></div></div><span class="stat-val">68</span></div>
+      <div class="stat-row"><span class="stat-lbl">主場優勢</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="85"></div></div><span class="stat-val">85</span></div>
+      <div class="stat-row"><span class="stat-lbl">三分命中</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="65"></div></div><span class="stat-val">65</span></div>
+      <div class="stat-row"><span class="stat-lbl">季後賽經驗</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="78"></div></div><span class="stat-val">78</span></div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>📝 系列賽背景</h4>
+      <p>尼克斯在第一輪G6以史上最大半場領先47分（打破2017騎士41分紀錄）大勝老鷹晉級。76人則以3比1落後完成驚天逆轉，擊敗波士頓凱爾特人。這是兩支傳統強隊的歷史宿敵對決——兩隊共有11次季後賽交手紀錄，76人歷史勝6負4。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🔑 系列賽關鍵</h4>
+      <p>Jalen Brunson能否延續場均攻守一體的表現？Karl-Anthony Towns的籃板是否能壓制Embiid缺陣後的費城內線？76人的Tyrese Maxey在首輪打出壓哨球英雄表現，但長期作戰能否維持？這將是決定系列賽走向的核心問題。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="kn-stars">
+    <div class="players-grid">
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1628384.png" alt="Jalen Brunson" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Jalen Brunson</div>
+          <div class="player-pos">PG · 尼克斯隊長</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>28.7</strong>分</span>
+            <span class="stat-pill"><strong>6.5</strong>助</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1628388.png" alt="Karl-Anthony Towns" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Karl-Anthony Towns</div>
+          <div class="player-pos">C · 雙塔內柱</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>24.3</strong>分</span>
+            <span class="stat-pill"><strong>13.1</strong>籃板</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1629029.png" alt="Tyrese Maxey" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Tyrese Maxey</div>
+          <div class="player-pos">PG · 76人引擎</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>27.5</strong>分</span>
+            <span class="stat-pill"><strong>5.8</strong>助</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/203954.png" alt="Joel Embiid" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Joel Embiid</div>
+          <div class="player-pos">C · 76人核心</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>傷兵</strong></span>
+            <span class="stat-pill">狀態未定</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>🌟 球星突破關鍵</h4>
+      <p>Brunson已成為Knicks最可靠的季後賽投手，特別在壓哨時刻的穩定度讓人想起2000年代的Reggie Miller。Maxey首輪的連續關鍵球展現他已蛻變為真正的頭號球員。兩人的PG對決將是系列賽最精彩的看點。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="kn-injury">
+    <div class="analysis-block">
+      <h4>🚑 尼克斯傷兵狀況</h4>
+      <p>尼克斯陣容相對健康，Mitchell Robinson的防守強度是內線保障。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Mitchell Robinson — 評估中</span>
+      </div>
+    </div>
+    <div class="analysis-block">
+      <h4>🚑 76人傷兵狀況</h4>
+      <p>Joel Embiid在G7中拼盡全力上場，但左膝健康是最大隱憂。Paul George持續評估中。76人的傷兵問題貫穿整個賽季，能否在系列賽保持健康是關鍵。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Joel Embiid — 左膝評估中</span>
+        <span class="injury-tag">Paul George — 膝傷評估</span>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">「Embiid在G7把所有東西都留在場上了——但這樣的代價，身體是否負擔得起接下來的系列賽，是76人最大的未知數。」</div>
+      <div class="quote-author">ESPN · Tim Bontemps</div>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="kn-strategy">
+    <div class="analysis-block">
+      <h4>🗗 尼克斯：雙塔壓陣、體能消耗戰</h4>
+      <p>Tom Thibodeau的防守哲學：以Robinson + Towns的雙大個子施壓對手內線，搭配OG Anunoby的鋒線防守封鎖對方球星。進攻端依賴Brunson的擋拆體系，大量消耗對手體能，以半場陣地戰取勝。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🗗 76人：Maxey節奏、VJ Edgecombe奇兵</h4>
+      <p>費城的計劃是以Maxey的速度破壞尼克斯的防守節奏，VJ Edgecombe的爆發力扣籃是重要武器。若Embiid健康，費城具備翻轉系列賽的能量；但若Embiid受限，76人將仰賴群策群力的集體進攻解決問題。</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- Panel: Pistons vs Cavaliers -->
+
+<div class="detail-overlay" id="panel-pistonsCAV">
+  <div class="detail-panel">
+    <button class="panel-close" onclick="closePanel('pistonsCAV')">✕</button>
+    <div class="panel-header">
+      <div class="panel-logo-text">⚙️</div>
+      <div class="panel-title">
+        <h2>PISTONS vs CAVALIERS</h2>
+        <p>東區半決賽 · 底特律 vs 克里夫蘭</p>
+      </div>
+      <div class="panel-power">
+        <div class="power-score">55%</div>
+        <div class="power-lbl">活塞勝率</div>
+      </div>
+    </div>
+
+```
+<div class="panel-tabs">
+  <button class="panel-tab active" onclick="switchPanelTab(this, 'pc-overview')">總覽</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'pc-stars')">球星分析</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'pc-injury')">傷兵</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'pc-strategy')">戰略</button>
+</div>
+
+<div class="panel-content">
+  <div class="panel-tab-content active" id="pc-overview">
+    <div class="stats-radar">
+      <div class="stat-row"><span class="stat-lbl">進攻效率</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="70"></div></div><span class="stat-val">70</span></div>
+      <div class="stat-row"><span class="stat-lbl">防守強度</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="88"></div></div><span class="stat-val">88</span></div>
+      <div class="stat-row"><span class="stat-lbl">主場優勢</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="80"></div></div><span class="stat-val">80</span></div>
+      <div class="stat-row"><span class="stat-lbl">三分命中</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="55"></div></div><span class="stat-val">55</span></div>
+      <div class="stat-row"><span class="stat-lbl">季後賽經驗</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="60"></div></div><span class="stat-val">60</span></div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>📝 系列賽背景</h4>
+      <p>活塞以東區第一種子完成首輪奇蹟逆轉——在落後24分的情況下完成歷史性翻盤。騎士在G7逆轉猛龍晉級，Jarrett Allen貢獻22分19籃板的史詩演出。兩隊的歷史交戰紀錄中，騎士曾對活塞創下12連勝紀錄。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🔑 系列賽關鍵</h4>
+      <p>Cade Cunningham的肺部傷勢恢復情況？James Harden能否在高強度系列賽中控制失誤（首輪6場累計30次失誤）？活塞的三分弱點面對騎士擅長的外線轟炸戰術，將構成嚴峻考驗。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="pc-stars">
+    <div class="players-grid">
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1630595.png" alt="Cade Cunningham" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Cade Cunningham</div>
+          <div class="player-pos">PG · 活塞靈魂</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>24.2</strong>分</span>
+            <span class="stat-pill"><strong>8.7</strong>助</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1628384.png" alt="Donovan Mitchell" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Donovan Mitchell</div>
+          <div class="player-pos">SG · 騎士得分王</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>26.5</strong>分</span>
+            <span class="stat-pill"><strong>5.2</strong>助</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/201935.png" alt="James Harden" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">James Harden</div>
+          <div class="player-pos">PG · 騎士老將核心</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>23.0</strong>分</span>
+            <span class="stat-pill"><strong>11.3</strong>助</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1630596.png" alt="Evan Mobley" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Evan Mobley</div>
+          <div class="player-pos">PF/C · 騎士防守支柱</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>23.0</strong>分</span>
+            <span class="stat-pill"><strong>9.0</strong>籃板</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>🌟 球星突破關鍵</h4>
+      <p>Cunningham和Banchero在首輪同場各砍45分，是本屆季後賽最精彩的雙核對決。Mitchell的生涯季後賽均值28.3分（歷史第七），但從未越過東區半決賽——這是他最重要的突破機會。Harden的傳球視野是騎士進攻體系的引擎，但失誤問題是隱患。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="pc-injury">
+    <div class="analysis-block">
+      <h4>🚑 活塞傷兵狀況</h4>
+      <p>Cade Cunningham因肺部塌陷缺席部分賽季，回歸後狀態逐漸恢復。活塞在他缺陣期間仍維持強勁表現，展現深度，但冠軍之路仍需Cade全力領軍。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Cade Cunningham — 肺部傷勢恢復中</span>
+      </div>
+    </div>
+    <div class="analysis-block">
+      <h4>🚑 騎士傷兵狀況</h4>
+      <p>Brandon Ingram在G6次節因右腳跟發炎退場未回，是騎士最大的傷兵警報。Jarrett Allen目前健康，是內線保障。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Brandon Ingram — 右腳跟發炎</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="pc-strategy">
+    <div class="analysis-block">
+      <h4>🗗 活塞：鐵血防守、消耗對手</h4>
+      <p>活塞是過去15年唯三同時稱霸抄截+阻攻的球隊，防守強度堪稱聯盟頂尖。Isaiah Stewart的身體對抗是Cade的完美保鏢。進攻端，活塞三分弱點需要靠中距離和內線突破彌補。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🗗 騎士：三分外爆、Harden組織</h4>
+      <p>騎士的核心是Harden的Pass First哲學配合Mitchell的爆發力。Evan Mobley的兩頭撐場讓騎士在傳統戰與空間戰之間靈活切換。騎士對活塞歷史上的12連勝心理優勢不可小覷。</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- Panel: Thunder vs Lakers -->
+
+<div class="detail-overlay" id="panel-thunderLAL">
+  <div class="detail-panel">
+    <button class="panel-close" onclick="closePanel('thunderLAL')">✕</button>
+    <div class="panel-header">
+      <div class="panel-logo-text">⚡</div>
+      <div class="panel-title">
+        <h2>THUNDER vs LAKERS</h2>
+        <p>西區半決賽 · 奧克拉荷馬 vs 洛杉磯</p>
+      </div>
+      <div class="panel-power">
+        <div class="power-score">75%</div>
+        <div class="power-lbl">雷霆勝率</div>
+      </div>
+    </div>
+
+```
+<div class="panel-tabs">
+  <button class="panel-tab active" onclick="switchPanelTab(this, 'tl-overview')">總覽</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'tl-stars')">球星分析</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'tl-injury')">傷兵</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'tl-strategy')">戰略</button>
+</div>
+
+<div class="panel-content">
+  <div class="panel-tab-content active" id="tl-overview">
+    <div class="stats-radar">
+      <div class="stat-row"><span class="stat-lbl">進攻效率</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="82"></div></div><span class="stat-val">82</span></div>
+      <div class="stat-row"><span class="stat-lbl">防守強度</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="95"></div></div><span class="stat-val">95</span></div>
+      <div class="stat-row"><span class="stat-lbl">陣容深度</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="90"></div></div><span class="stat-val">90</span></div>
+      <div class="stat-row"><span class="stat-lbl">三分命中</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="72"></div></div><span class="stat-val">72</span></div>
+      <div class="stat-row"><span class="stat-lbl">冠軍經驗</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="88"></div></div><span class="stat-val">88</span></div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>📝 系列賽背景</h4>
+      <p>雷霆在首輪以4比0橫掃太陽，SGA場均33.8分55.1%命中率主宰全場。湖人則在Luka Dončić缺陣的情況下，由LeBron James親率奮戰，擊敗火箭晉級。這是兩隊的第10次季後賽交手，湖人歷史上以6比3領先。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🔑 最大看點</h4>
+      <p>LeBron James第19次季後賽登場（平John Stockton和Karl Malone紀錄），有機會以41歲高齡完成最後的衝冠壯舉，但面對全聯盟最強防守體系的雷霆，難度極高。SGA對決LeBron是本系列賽的最大焦點。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="tl-stars">
+    <div class="players-grid">
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1628983.png" alt="Shai Gilgeous-Alexander" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Shai Gilgeous-Alexander</div>
+          <div class="player-pos">PG · 衛冕MVP</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>31.1</strong>分</span>
+            <span class="stat-pill"><strong>33.8</strong>P.季後</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/2544.png" alt="LeBron James" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">LeBron James</div>
+          <div class="player-pos">SF · 不老傳奇</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>41歲</strong></span>
+            <span class="stat-pill">第19次季後賽</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1629029.png" alt="Chet Holmgren" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Chet Holmgren</div>
+          <div class="player-pos">C · 雷霆護框者</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>18.5</strong>分</span>
+            <span class="stat-pill"><strong>2.4</strong>阻攻</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1629027.png" alt="Luka Doncic" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Luka Dončić</div>
+          <div class="player-pos">PG · 湖人核心（傷缺）</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>33.5</strong>分賽季</span>
+            <span class="stat-pill" style="color:#ff6b7a">傷兵缺陣</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>🌟 SGA的統治力</h4>
+      <p>SGA是繼Michael Jordan之後最完整的得分後衛之一。他在首輪橫掃太陽時以55.1%命中率場均砍下33.8分，展現超凡效率。本賽季他在SGA主導下連場20+分，ESPN已確認他將成為近16年來第一位連續奪MVP的球員。Luka的缺席讓湖人失去了唯一能在1對1上挑戰SGA的球員。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="tl-injury">
+    <div class="analysis-block">
+      <h4>🚑 雷霆傷兵狀況</h4>
+      <p>Jalen Williams在季後賽中受傷，但雷霆展現驚人深度——即使缺少第二主力，球隊依然橫掃太陽。Alex Caruso、Lu Dort等防守悍將保持健康，陣容完整度仍是聯盟最高。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Jalen Williams — 傷勢評估中</span>
+      </div>
+    </div>
+    <div class="analysis-block">
+      <h4>🚑 湖人傷兵危機</h4>
+      <p>這是本屆季後賽最嚴重的傷兵問題。Luka Dončić二級腿後肌拉傷缺陣，Austin Reaves傷後狀況不明。LeBron在沒有兩大主力協助下完成了首輪晉級，已是不小的奇蹟。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Luka Dončić — 二級腿後肌拉傷</span>
+        <span class="injury-tag">Austin Reaves — 傷勢評估</span>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">「健康與受傷的超級球星在西區交鋒，Luka Dončić和Austin Reaves的缺席讓湖人面對衛冕軍時處境艱難。」</div>
+      <div class="quote-author">NBA.com · 系列賽展望</div>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="tl-strategy">
+    <div class="analysis-block">
+      <h4>🗗 雷霆：全聯盟第一防守、失誤逼迫戰術</h4>
+      <p>OKC以進攻失誤率全聯盟第一（攻）加上防守失誤率第二（守）的雙向優勢完全掌控比賽節奏。Lu Dort + Alex Caruso的防守群可以切換到任何球員身上。SGA的得分能力讓他們不需要依賴任何一個戰術便能得分。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🗗 湖人：三分轟炸、LeBron的老將經驗</h4>
+      <p>ESPN指出「湖人靠三分球生存」——這在面對OKC聯盟頂尖的外線防守時是高風險策略。LeBron的IQ和傳球視野是湖人製造局面的唯一可靠方式。湖人需要Luke Kennard（系列賽三分45%）等射手保持超水準演出。</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- Panel: Spurs vs Timberwolves -->
+
+<div class="detail-overlay" id="panel-spursWolves">
+  <div class="detail-panel">
+    <button class="panel-close" onclick="closePanel('spursWolves')">✕</button>
+    <div class="panel-header">
+      <div class="panel-logo-text">🦋</div>
+      <div class="panel-title">
+        <h2>SPURS vs TIMBERWOLVES</h2>
+        <p>西區半決賽 · 聖安東尼奧 vs 明尼蘇達</p>
+      </div>
+      <div class="panel-power">
+        <div class="power-score">58%</div>
+        <div class="power-lbl">馬刺勝率</div>
+      </div>
+    </div>
+
+```
+<div class="panel-tabs">
+  <button class="panel-tab active" onclick="switchPanelTab(this, 'sw-overview')">總覽</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'sw-stars')">球星分析</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'sw-injury')">傷兵</button>
+  <button class="panel-tab" onclick="switchPanelTab(this, 'sw-strategy')">戰略</button>
+</div>
+
+<div class="panel-content">
+  <div class="panel-tab-content active" id="sw-overview">
+    <div class="stats-radar">
+      <div class="stat-row"><span class="stat-lbl">進攻效率</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="78"></div></div><span class="stat-val">78</span></div>
+      <div class="stat-row"><span class="stat-lbl">防守強度</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="85"></div></div><span class="stat-val">85</span></div>
+      <div class="stat-row"><span class="stat-lbl">陣容天花板</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="92"></div></div><span class="stat-val">92</span></div>
+      <div class="stat-row"><span class="stat-lbl">年輕爆發力</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="88"></div></div><span class="stat-val">88</span></div>
+      <div class="stat-row"><span class="stat-lbl">季後賽首秀</span><div class="stat-bar-wrap"><div class="stat-bar-fill" data-w="45"></div></div><span class="stat-val">45</span></div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>📝 系列賽背景</h4>
+      <p>馬刺是本屆季後賽最大驚喜——62勝的成績是繼戰績第四支在缺席季後賽後的次年贏得60+勝的球隊。Wembanyama迎來他的季後賽首秀，ESPN將他的首場比賽稱為「NBA的一個新信號」。灰狼是連續第5年打進季後賽，Anthony Edwards的膝傷是最大未知。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🔑 史詩對決</h4>
+      <p>這是雙方的第三次季後賽交手，馬刺歷史2勝0負。但這次的馬刺已截然不同——是Wembanyama的馬刺，一個對手從來沒有面對過的全新型態。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="sw-stars">
+    <div class="players-grid">
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1641705.png" alt="Victor Wembanyama" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Victor Wembanyama</div>
+          <div class="player-pos">C · 外星人</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>25.0</strong>分</span>
+            <span class="stat-pill"><strong>197</strong>阻攻(賽季)</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1631094.png" alt="Anthony Edwards" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Anthony Edwards</div>
+          <div class="player-pos">SG · 灰狼引擎</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>傷兵評估</strong></span>
+            <span class="stat-pill">膝傷復出</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1629636.png" alt="Stephon Castle" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Stephon Castle</div>
+          <div class="player-pos">PG · 馬刺新星</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>18.2</strong>分</span>
+            <span class="stat-pill"><strong>6.5</strong>助</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-card">
+        <img class="player-photo" src="https://cdn.nba.com/headshots/nba/latest/260x190/1629029.png" alt="Rudy Gobert" onerror="this.style.display='none'">
+        <div class="player-info">
+          <div class="player-name">Rudy Gobert</div>
+          <div class="player-pos">C · 灰狼護框柱</div>
+          <div class="player-stats">
+            <span class="stat-pill"><strong>13.2</strong>分</span>
+            <span class="stat-pill"><strong>12.8</strong>籃板</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="analysis-block" style="margin-top:20px;">
+      <h4>🌟 Wembanyama的首次季後賽</h4>
+      <p>ESPN將Wembanyama比擬為22歲的LeBron、Tim Duncan和Kawhi Leonard——三者都在那個年齡留下傳奇印記。Wemby的數據：場均25分、Defensive Player of the Year級別的+17.0 net rating。他在重要比賽的35分鐘以上場合均值30.7分14.1籃板5.0助攻4.0阻攻，展現出全知全能的型態。肋骨傷勢是唯一隱憂。</p>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="sw-injury">
+    <div class="analysis-block">
+      <h4>🚑 馬刺傷兵狀況</h4>
+      <p>Wembanyama在4月6日發生左肋挫傷，是系列賽最大變數。雖然傷勢屬於輕度，但在灰狼的強力對抗下，肋骨傷勢可能影響他的動作幅度和投籃機制。ESPN指出對手在正規賽中以強烈對抗成功干擾Wemby。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Victor Wembanyama — 左肋挫傷</span>
+      </div>
+    </div>
+    <div class="analysis-block">
+      <h4>🚑 灰狼傷兵狀況</h4>
+      <p>Anthony Edwards的膝傷在第二輪前持續評估，他的回歸時間是灰狼晉級的最大變數。消息顯示他可能在G1重返，但狀態有待觀察。</p>
+      <div style="margin-top:10px;">
+        <span class="injury-tag">Anthony Edwards — 膝傷回歸評估</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-tab-content" id="sw-strategy">
+    <div class="analysis-block">
+      <h4>🗗 馬刺：閃電快攻 + 外星人統治</h4>
+      <p>馬刺是2026年節奏最快的球隊——以全隊年輕體能優勢在快攻和轉換中製造輕鬆得分。但季後賽的半場陣地戰才是真正考驗，Wembanyama的戰術適應能力和年輕球員的組織能力是關鍵。馬刺也成為繼2019年勇士後首支在系列賽每場都落後兩位數仍然晉級的球隊。</p>
+    </div>
+    <div class="analysis-block">
+      <h4>🗗 灰狼：Gobert護框 + Edwards爆發</h4>
+      <p>灰狼的核心策略是以Rudy Gobert的大個子對抗Wembanyama的空間化進攻，同時依賴Edwards的爆發力打快攻。但ESPN分析指出：灰狼對陣馬刺，有趣之處在於「高大的中鋒」對決；Gobert面對Wemby的外線射程將構成嚴峻防守難題。</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>資料來源：NBA.com · ESPN · CBS Sports · NBC Sports · Wikipedia · Basketball Reference</p>
+    <p style="margin-top:8px;">© 2026 NBA 季後賽 八強分析 · 製作日期：2026年5月</p>
+  </div>
+</footer>
+
+<script>
+// ─── Tab switching ───
+function switchConf(conf) {
+  document.querySelectorAll('.conference-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('conf-' + conf).classList.add('active');
+  document.querySelector(`[data-conf="${conf}"]`).classList.add('active');
+  setTimeout(animateBars, 200);
+  setTimeout(checkReveal, 100);
+}
+
+// ─── Panel overlay ───
+function openPanel(id) {
+  const overlay = document.getElementById('panel-' + id);
+  if (!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    overlay.querySelectorAll('.stat-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.w + '%';
+    });
+  }, 300);
+}
+
+function closePanel(id) {
+  const overlay = document.getElementById('panel-' + id);
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on backdrop click
+document.querySelectorAll('.detail-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+});
+
+// Close on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.detail-overlay.open').forEach(o => {
+      o.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+});
+
+// ─── Panel inner tabs ───
+function switchPanelTab(btn, contentId) {
+  const panel = btn.closest('.detail-panel');
+  panel.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  panel.querySelectorAll('.panel-tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const content = document.getElementById(contentId);
+  if (content) {
+    content.classList.add('active');
+    setTimeout(() => {
+      content.querySelectorAll('.stat-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+    }, 100);
+  }
+}
+
+// ─── Animate bars on main screen ───
+function animateBars() {
+  document.querySelectorAll('.conference-section.active .stat-bar-fill').forEach(bar => {
+    bar.style.width = bar.dataset.w + '%';
+  });
+}
+
+// ─── Scroll reveal ───
+function checkReveal() {
+  const reveals = document.querySelectorAll('.reveal');
+  reveals.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if (top < window.innerHeight - 60) {
+      el.classList.add('visible');
+    }
+  });
+}
+
+window.addEventListener('scroll', checkReveal);
+window.addEventListener('load', () => {
+  checkReveal();
+  animateBars();
+});
+
+// ─── Staggered reveal on load ───
+document.querySelectorAll('.matchup-card').forEach((card, i) => {
+  card.style.animationDelay = `${i * 0.1}s`;
+});
+
+// ─── Initial bar animation ───
+setTimeout(() => {
+  // matchup footer bars animate on page load
+  document.querySelectorAll('.prediction-bar').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0';
+    setTimeout(() => { bar.style.transition = 'width 1.5s cubic-bezier(.25,.8,.25,1)'; bar.style.width = w; }, 300);
+  });
+  checkReveal();
+  animateBars();
+}, 200);
+</script>
+
+</body>
+</html>
